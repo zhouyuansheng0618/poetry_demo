@@ -12,6 +12,15 @@ gino = {extras = ["starlette"], version = "^1.0.1"}
 alembic = "^1.8.0"
 psycopg2 = "^2.9.3"
 gunicorn = "^20.1.0"
+loguru = "^0.6.0"
+APScheduler = "^3.9.1"
+python-jose = "^3.3.0"
+peewee = "^3.15.1"
+PyMySQL = "^1.0.2"
+casbin = "^1.16.9"
+casbin-sqlalchemy-adapter = "^0.4.2"
+nanoid = "^2.0.0"
+redis = "^4.3.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
