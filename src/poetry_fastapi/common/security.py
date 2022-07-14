@@ -20,9 +20,9 @@ from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
 
-from core.config.development_config import settings
+from poetry_fastapi.config.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["sha256_crypt", "md5_crypt", "des_crypt"])
 
 
 def create_access_token(
@@ -47,27 +47,41 @@ def create_access_token(
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+from nanoid import generate
 
-def verify_password(plain_password: str, hashed_password: str, salt: str) -> bool:
+
+def gen_nanoid() -> str:
     """
-    验证密码
-    :param plain_password: 原密码
-    :param hashed_password: hash后的密码
+    生成nanoid 长度6
+    """
+    return generate(size=6)
+
+
+from passlib.context import CryptContext
+
+
+def encryption_password_or_decode(*, pwd: str, hashed_password: str = None):
+    """
+    密码加密或解密
+    :param pwd:
+    :param hashed_password:
     :return:
     """
-    return pwd_context.verify(plain_password + salt, hashed_password)
+    encryption_pwd = CryptContext(
+        schemes=["sha256_crypt", "md5_crypt", "des_crypt"]
+    )
 
+    def encryption_password():
+        salt = gen_nanoid()
+        password = encryption_pwd.hash(pwd + salt)
 
-def get_password_hash(password: str, salt: str) -> str:
-    """
-    获取 hash 后的密码  使用加盐
-    :param password:
-    :return:
-    """
-    return pwd_context.hash(password + salt)
+        return password, salt
 
+    def decode_password():
+        password = encryption_pwd.verify(pwd, hashed_password)
+        return password
+
+    return decode_password() if hashed_password else encryption_password()
 
 if __name__ == '__main__':
-    print(get_password_hash('123', 'asdw'))
-    a = '$2b$12$G68Zc92VosUNuYM90joIwuuxFEYvU0q0tLBGw1kViD5E.WBtZE3h2'
-    print(verify_password(plain_password='123', hashed_password=a, salt='asdw'))
+    print(create_access_token(subject={"id":"hVuXZWE1qLri"}))

@@ -8,12 +8,13 @@
 
 from fastapi import APIRouter
 from poetry_fastapi.api.v1.category import router as category_router
-
+from poetry_fastapi.api.v1.user import router as user_router
 # from api.v1.blog import router as blog_router
 # from api.v1.tag import router as tag_router
 api_v1_router = APIRouter()
 # api_v1_router.include_router(auth_router, prefix="/admin/auth", tags=["用户"])
 api_v1_router.include_router(category_router, prefix='/category', tags=['分类'])
+api_v1_router.include_router(user_router, prefix='/user', tags=['分类'])
 # api_v1_router.include_router(auth_router,prefix='/auth')
 # api_v1_router.include_router(tag_router,prefix='/tag')
 # api_v1_router.include_router(items_router, tags=["测试API"], dependencies=[Depends(check_jwt_token)])

@@ -18,8 +18,11 @@ from poetry_fastapi.common import custom_exc, response_code
 from poetry_fastapi.common.schedule import schedule
 from poetry_fastapi.core.router_v1 import api_v1_router
 from poetry_fastapi.db.redis import redis_client
-from poetry_fastapi.db.session import db
+
 from poetry_fastapi.common import resp
+from poetry_fastapi.db.session import SessionLocal
+
+
 def create_app() -> FastAPI:
     """
     生成FatAPI对象
@@ -220,8 +223,8 @@ def register_init(app: FastAPI) -> None:
 
         # 初始化 apscheduler
         schedule.init_scheduler()
-
-        db.connect()
+        SessionLocal()
+        # db.connect()
 
     @app.on_event('shutdown')
     async def shutdown_connect():
@@ -230,7 +233,6 @@ def register_init(app: FastAPI) -> None:
         :return:
         """
         schedule.shutdown()
-
-        if not db.is_closed():
-            db.close()
+        if not SessionLocal().is_closed():
+            SessionLocal().close()
 

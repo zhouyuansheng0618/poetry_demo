@@ -6,7 +6,6 @@
 # @Time : 2021/12/21 22:13
 from typing import Any, Optional
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from poetry_fastapi.common import deps, response_code
 

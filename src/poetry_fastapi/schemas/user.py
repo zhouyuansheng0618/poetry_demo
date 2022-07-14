@@ -10,11 +10,14 @@ from poetry_fastapi.schemas.base import BaseResp, ResAntTable
 
 
 class BaseUser(BaseModel):
-    pass
+    username: str = Field(min_length=3, max_length=10)
+    password: str = Field(min_length=6, max_length=12)
 
 
-class CreateUser(BaseUser):
-    pass
+class CreateUser(BaseModel):
+    name: str
+    mobile: str
+    password: str
 
 
 class UpdateUser(BaseUser):
@@ -27,3 +30,7 @@ class DeleteUser(BaseUser):
 
 class QueryUser(BaseUser):
     pass
+
+
+class UserInfo(BaseModel):
+    name: str

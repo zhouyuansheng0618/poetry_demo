@@ -46,9 +46,3 @@ logger.add(log_path_name,
            retention=settings.LOGGER_RETENTION,
            enqueue=True)
 
-if __name__ == '__main__':
-    logger.warning("warning")
-    logger.info("info")
-    logger.error("error")
-    logger.critical("critical")
-    logger.debug("debug")
