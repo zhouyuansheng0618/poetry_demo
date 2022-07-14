@@ -105,3 +105,6 @@ def paginator(query: ModelSelect, page: int, page_size: int, order_by: str = "id
     return list(query.dicts()), paginate
 
 
+
+
+

@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/poetry_fastapi/models" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/poetry_fastapi/schemas" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Poetry (poetry_fastapi)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Poetry (poetry_demo)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

@@ -6,7 +6,7 @@
 from datetime import datetime
 from pydantic import Field, BaseModel, validator
 from typing import Optional, List
-from schemas.base import BaseResp, ResAntTable
+from poetry_fastapi.schemas.base import BaseResp, ResAntTable
 
 
 class BaseUser(BaseModel):

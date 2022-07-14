@@ -5,32 +5,20 @@
 @Software: PyCharm
 @File    : deps.py
 '''
-from typing import Generator, Any, Union, Optional
+"""
 
+一些通用的依赖功能
+
+"""
+from typing import Any, Union, Optional
+#
 from jose import jwt
 from fastapi import Header, Depends, Request
-from sqlalchemy.orm import Session
 from pydantic import ValidationError
 
-
-# from poetry_fastapi.db.session import SessionLocal
-from poetry_fastapi.common import custom_exc, sys_casbin
-from poetry_fastapi.config.config import settings
-
+from poetry_fastapi.common import custom_exc
 from poetry_fastapi.models.user import User
-
-
-def get_db() -> Generator:
-    """
-    获取sqlalchemy会话对象
-    :return:
-    """
-    db = SessionLocal()
-    try:
-
-        yield db
-    finally:
-        db.close()
+from poetry_fastapi.config.config import settings
 
 
 def check_jwt_token(
@@ -57,7 +45,6 @@ def check_jwt_token(
 
 
 def get_current_user(
-        db: Session = Depends(get_db),
         token: Optional[str] = Depends(check_jwt_token)
 ) -> User:
     """
@@ -66,29 +53,7 @@ def get_current_user(
     :param token:
     :return:
     """
-
-    user = User.get(db, id=token.get("sub"))
+    user = User.single_by_id(uid=token.get("sub"))
     if not user:
         raise custom_exc.TokenAuthError(err_desc="User not found")
     return user
-
-
-def check_authority(
-        request: Request,
-        token: Optional[str] = Depends(check_jwt_token)
-):
-    """
-    权限验证 依赖于 JWT token
-    :param request:
-    :param token:
-    :return:
-    """
-    authority_id = token.get("authority_id")
-    path = request.url.path
-    method = request.method
-
-    e = sys_casbin.get_casbin()
-    if not e.enforce(str(authority_id), path, method):
-        # 注意 字段类型都是字符串
-        # 根据token中的 authority_id  请求路径  方法 判断路径
-        raise custom_exc.AuthenticationError()

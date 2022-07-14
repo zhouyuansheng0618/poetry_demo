@@ -7,7 +7,9 @@
 '''
 # 需要使用 alembic 生成表的 记得在这里 从models里面 倒入进来才行 否则不会生成
 # imported by Alembic # 方便在Alembic导入,迁移用
-from base_class import Base
+
+from poetry_fastapi.db.base_class import Base
+from poetry_fastapi.models.user import User
 # from models.blog import BlogTag, Category, CityVisitor, Comment, Blog, Friend
 # from models.log import ExceptionLog, LoginLog, OperationLog, ScheduleJobLog, VisitLog
 # from models.settings import About, VisitRecord, SiteSetting, Tag, Visitor, ScheduleJob, Moment

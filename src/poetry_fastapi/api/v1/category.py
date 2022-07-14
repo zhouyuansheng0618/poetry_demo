@@ -16,7 +16,7 @@ from poetry_fastapi.common import deps, response_code
 router = APIRouter()
 
 
-@router.post("/create_category", summary="创建文章分类")
+@router.get("/create_category", summary="创建文章分类")
 def category_create() -> Any:
     add_category=[]
     return response_code.resp_200(data=add_category, message="文章分类创建成功")
