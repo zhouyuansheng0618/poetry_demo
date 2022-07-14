@@ -5,6 +5,7 @@
 @Software: PyCharm
 @File    : deps.py
 '''
+from poetry_fastapi.crud.user import crud_user
 from poetry_fastapi.schemas.auth_token import TokenPayload
 
 """
@@ -24,7 +25,7 @@ from sqlalchemy.orm import Session
 from fastapi import Header, Depends, Request
 
 from poetry_fastapi.common.get_db import get_db
-from poetry_fastapi.crud.user import crud_user
+
 
 def check_jwt_token(
         token: Optional[str] = Header(..., description="登录token")
@@ -48,25 +49,24 @@ def check_jwt_token(
     except (jwt.JWTError, ValidationError, AttributeError):
         raise custom_exc.TokenAuthError()
 
-#
-# def get_current_user(
-#         db: Session = Depends(get_db),
-#         token: Optional[dict] = Depends(check_jwt_token)
-# ) -> User:
-#     """
-#     根据header中token 获取当前用户
-#     :param db:
-#     :param token:
-#     :return:
-#     """
-#
-#     id = token.get("sub")
-#     print()
-#     user = db.query(User).filter(id='hVuXZWE1qLri').first()
-#     print(user)
-#     if not user:
-#         raise custom_exc.TokenAuthError(err_desc="User not found")
-#     return user
+def get_current_user(
+        db: Session = Depends(get_db),
+        token: Optional[str] = Header(None)
+) -> User:
+    """
+    根据header中token 获取当前用户
+    :param db:
+    :param token:
+    :return:
+    """
+    if not token:
+        raise custom_exc.UserTokenError(err_desc='headers not found token')
+    token_data = check_jwt_token(token)
+    uid = eval(token_data.get('sub')).get("id")
+    user = crud_user.get(db, id=uid)
+    if not user:
+        raise custom_exc.TokenAuthError(err_desc="User not found")
+    return user
 
 
 if __name__ == '__main__':

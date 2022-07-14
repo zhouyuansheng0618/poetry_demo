@@ -34,3 +34,8 @@ class QueryUser(BaseUser):
 
 class UserInfo(BaseModel):
     name: str
+
+
+class RespUserInfo(BaseResp):
+    # 响应用户信息
+    data: UserInfo

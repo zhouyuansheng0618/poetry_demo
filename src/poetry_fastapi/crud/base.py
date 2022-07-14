@@ -21,7 +21,6 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.model = model
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        print("**",db)
         return db.query(self.model).filter(self.model.id == id).first()
 
     def get_multi(
