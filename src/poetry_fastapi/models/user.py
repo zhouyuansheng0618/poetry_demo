@@ -26,8 +26,6 @@ class User(Base):
     __table_args__ = ({'comment': '用户表'})
 
 
-
-
 # 权限表
 class Permission(Base):
     __tablename__ = "permission"
@@ -67,6 +65,7 @@ class Account(Base):
     user_id = Column(VARCHAR(10), ForeignKey("user.id"))  # 与用户表进行关联
     open_code = Column(VARCHAR(255), unique=True, nullable=True,
                        comment="登录账号，如手机号 微信号等")
+    account = Column(VARCHAR(10), comment="账号", unique=True)
     category = Column(Integer, comment="账号类别", nullable=True)
     __table_args__ = ({'comment': '账号表'})
 

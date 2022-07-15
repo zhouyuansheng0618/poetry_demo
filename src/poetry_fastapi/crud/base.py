@@ -8,6 +8,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from poetry_fastapi.db.base_class import Base
 
@@ -22,6 +23,9 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
+
+    def get_query(self, db: Session, filter: Any) -> Optional[ModelType]:
+        return db.query(self.model).filter(*filter).all()
 
     def get_multi(
             self, db: Session, *, skip: int = 0, limit: int = 100

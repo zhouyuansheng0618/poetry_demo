@@ -21,6 +21,7 @@ from fastapi.responses import JSONResponse, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi import status as http_status
 
+
 def resp_200(*, data: Union[list, dict, str] = None, message: str = "Success") -> Response:
     return JSONResponse(
         status_code=status.HTTP_200_OK,
@@ -74,7 +75,7 @@ def resp_4003(*, data: Union[list, dict, str] = None, message: str = "Request Fa
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder({
-            'code': 4002,
+            'code': 4003,
             'data': data,
             'message': message,
         })
@@ -82,12 +83,23 @@ def resp_4003(*, data: Union[list, dict, str] = None, message: str = "Request Fa
 
 
 # token认证失败
-def resp_4003(*, data: Union[list, dict, str] = None, message: str = "Request Fail") -> Response:
+def resp_4004(*, data: Union[list, dict, str] = None, message: str = "Request Fail") -> Response:
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder({
-            'code': 4003,
+            'code': 4004,
             'data': data,
+            'message': message,
+        })
+    )
+
+
+# 用户已存在
+def resp_4005(*, data: Union[list, dict, str] = None, message: str = "Request Fail") -> Response:
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=jsonable_encoder({
+            'code': 4005,
             'message': message,
         })
     )
@@ -123,6 +135,8 @@ def response(code: int = 200, data: Type[SchemasType] = None, msg: str = 'Succes
     else:
         logger.warning(msg)
     return {'code': code, 'data': data, 'msg': msg}
+
+
 class Resp(object):
     def __init__(self, status: int, msg: str, code: int):
         self.status = status

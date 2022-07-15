@@ -70,5 +70,5 @@ def get_current_user(
 
 
 if __name__ == '__main__':
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg0ODIzNDQsInN1YiI6InsnaWQnOiAnaFZ1WFpXRTFxTHJpJ30iLCJhdXRob3JpdHlfaWQiOm51bGx9.N709TV3sXwlQYWL8LXFyMrmotdXx0UXzt1jFDyBMVsA"
-    # print(get_user(token=token))
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg0ODI0MTMsInN1YiI6InsndWlkJzogJ2ZhV3NYZUZGclR6Zid9IiwiYXV0aG9yaXR5X2lkIjpudWxsfQ.qyAMRx9FUFwlPMKRctyGza7nZShqhtd-BIC1iNU38mw"    # print(get_user(token=token))
+    print(check_jwt_token(token))
