@@ -34,7 +34,7 @@ def decode_password(pwd,salt,hashed_password):
     return password
 
 if __name__ == '__main__':
-
-    decode_password(pwd='admin',salt='JL2lAy',hashed_password='$5$rounds=535000$YauKkhm0XXGJ/pyA$sSXDA48tI/il4tkmeFr0F1fodgkHudwwNNFOKuJuQo8')
-
+    pass
+    # a =encryption_password_or_decode(pwd='admin',salt='JL2lAy',hashed_password='$5$rounds=535000$YauKkhm0XXGJ/pyA$sSXDA48tI/il4tkmeFr0F1fodgkHudwwNNFOKuJuQo8')
+    # print(a)
 

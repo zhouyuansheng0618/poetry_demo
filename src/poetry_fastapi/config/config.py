@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # 生产环境保管好 SECRET_KEY
-    SECRET_KEY: str = 'xxxxxxxx'
+    SECRET_KEY: str = 'XgIedE%o#5kElo%F'
 
     # 项目根路径
     BASE_PATH: str = os.path.dirname(os.path.dirname(os.path.dirname((os.path.abspath(__file__)))))

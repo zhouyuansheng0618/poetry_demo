@@ -14,23 +14,24 @@ class BaseUser(BaseModel):
     password: str = Field(min_length=6, max_length=18)
 
 
-
 class CreateUser(BaseModel):
     name: str = Field(min_length=2, max_length=32)
     phone: str = Field(min_length=11, max_length=11)
     password: str = Field(min_length=6, max_length=18)
 
 
-class UpdateUser(BaseUser):
-    pass
+class UpdateUser(BaseModel):
+    id: Optional[str] = None
+    name: Optional[str] = None
+    mobile: Optional[str] = None
+    hashed_password: Optional[str] = None
+    head_img_url: Optional[str] = None
+    salt: Optional[str] = None
+    is_delete: Optional[int] = 0
 
 
-class DeleteUser(BaseUser):
-    pass
-
-
-class QueryUser(BaseUser):
-    pass
+class DeleteUser(BaseModel):
+    id: str = Field(min_length=12, max_length=12)
 
 
 class UserInfo(BaseModel):

@@ -57,31 +57,14 @@ def gen_nanoid() -> str:
     return generate(size=6)
 
 
-from passlib.context import CryptContext
 
-
-def encryption_password_or_decode(*, pwd: str, hashed_password: str = None):
-    """
-    密码加密或解密
-    :param pwd:
-    :param hashed_password:
-    :return:
-    """
-    encryption_pwd = CryptContext(
-        schemes=["sha256_crypt", "md5_crypt", "des_crypt"]
-    )
-
-    def encryption_password():
-        salt = gen_nanoid()
-        password = encryption_pwd.hash(pwd + salt)
-
-        return password, salt
-
-    def decode_password():
-        password = encryption_pwd.verify(pwd, hashed_password)
-        return password
-
-    return decode_password() if hashed_password else encryption_password()
 
 if __name__ == '__main__':
-    print(create_access_token(subject={"id":"hVuXZWE1qLri"}))
+    print(create_access_token(subject={"id":"NEbkzL21mHiq"}))
+
+"""
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg3MzkzNDgsInN1YiI6InsnaWQnOiAnTkVia3pMMjFtSGlxJ30iLCJhdXRob3JpdHlfaWQiOm51bGx9.4rDZ8JiPtoC4ufZny234VasmpFZZNUJMWX8TtgTbJik
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg3MTcwMjgsInN1YiI6InsnaWQnOiAnaFZ1WFpXRTFxTHJpJ30iLCJhdXRob3JpdHlfaWQiOm51bGx9.XZe57KNyOJZGHgbx_9HJYZFwfCcQigTIi88vcur2xNw
+
+"""

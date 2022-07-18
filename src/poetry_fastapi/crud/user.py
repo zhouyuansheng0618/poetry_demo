@@ -22,8 +22,9 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
         return db.query(User).filter(id=id).first()
 
     def get_name(self, db: Session, name: str = None) -> Optional[User]:
-        return db.query(User).filter(User.name == name, User.state != 1, User.is_delete != 1).first()
-
+        return db.query(User).filter(User.name == name, User.state == 0, User.is_delete == 0).first()
+    def get_phone(self, db: Session, phone: str = None) -> Optional[User]:
+        return db.query(User).filter(User.mobile == phone, User.state == 0, User.is_delete == 0).first()
     def create(self, db: Session, *, obj_in: CreateUser) -> Optional[User]:
 
         hash_password, salt = encryption_password_or_decode(pwd=obj_in.password)
@@ -39,17 +40,24 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
         db.refresh(db_obj)
         return db_obj
 
+    def is_active(self, user: User) -> bool:
+        if user.is_delete == 0 and user.state == 0:
+            return True
+        return False
+
     def authenticate(self, db: Session, *, name: str = None, phone: str = None, password: str) -> Optional[User]:
         global user
+
         if not name and not phone:
             return None
         if name:
             user = crud_user.get_name(db, name)
         if phone:
-            user = crud_user.get_name(db, phone)
+            user = crud_user.get_phone(db, phone)
         if not user:
             return None
-        if not encryption_password_or_decode(pwd=password + user.salt, hashed_password=user.hashed_password):
+
+        if not encryption_password_or_decode(pwd=password, salt= user.salt, hashed_password=user.hashed_password):
             return None
 
         return user

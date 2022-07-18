@@ -22,7 +22,7 @@ from poetry_fastapi.common import custom_exc
 from poetry_fastapi.models.user import User
 from poetry_fastapi.config.config import settings
 from sqlalchemy.orm import Session
-from fastapi import Header, Depends, Request
+from fastapi import Header, Depends, HTTPException
 
 from poetry_fastapi.common.get_db import get_db
 
@@ -49,9 +49,10 @@ def check_jwt_token(
     except (jwt.JWTError, ValidationError, AttributeError):
         raise custom_exc.TokenAuthError()
 
+
 def get_current_user(
         db: Session = Depends(get_db),
-        token: Optional[str] = Header(None)
+        token: Optional[str] = Header(None, alias="X-Token")
 ) -> User:
     """
     根据header中token 获取当前用户
@@ -62,13 +63,21 @@ def get_current_user(
     if not token:
         raise custom_exc.UserTokenError(err_desc='headers not found token')
     token_data = check_jwt_token(token)
-    uid = eval(token_data.get('sub')).get("id")
+    uid = eval(token_data.get('sub')).get("uid")
     user = crud_user.get(db, id=uid)
     if not user:
         raise custom_exc.TokenAuthError(err_desc="User not found")
     return user
 
 
+def get_current_active_user(
+        current_user: User = Depends(get_current_user),
+) -> User:
+    if not crud_user.is_active(current_user):
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
+
+
 if __name__ == '__main__':
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg0ODI0MTMsInN1YiI6InsndWlkJzogJ2ZhV3NYZUZGclR6Zid9IiwiYXV0aG9yaXR5X2lkIjpudWxsfQ.qyAMRx9FUFwlPMKRctyGza7nZShqhtd-BIC1iNU38mw"    # print(get_user(token=token))
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTg0ODI0MTMsInN1YiI6InsndWlkJzogJ2ZhV3NYZUZGclR6Zid9IiwiYXV0aG9yaXR5X2lkIjpudWxsfQ.qyAMRx9FUFwlPMKRctyGza7nZShqhtd-BIC1iNU38mw"  # print(get_user(token=token))
     print(check_jwt_token(token))

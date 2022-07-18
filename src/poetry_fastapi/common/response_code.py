@@ -26,7 +26,7 @@ def resp_200(*, data: Union[list, dict, str] = None, message: str = "Success") -
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder({
-            'code': 200,
+            'code': 20000,
             'message': message,
             'data': data,
         })

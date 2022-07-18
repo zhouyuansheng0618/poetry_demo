@@ -17,7 +17,7 @@ def gen_nanoid() -> str:
 from passlib.context import CryptContext
 
 
-def encryption_password_or_decode(*, pwd: str, hashed_password: str = None):
+def encryption_password_or_decode(*, pwd: str, salt: str = None, hashed_password: str = None):
     """
     密码加密或解密
     :param pwd:
@@ -35,11 +35,7 @@ def encryption_password_or_decode(*, pwd: str, hashed_password: str = None):
         return password, salt
 
     def decode_password():
-        password = encryption_pwd.verify(pwd, hashed_password)
+        password = encryption_pwd.verify(pwd + salt, hashed_password)
         return password
 
     return decode_password() if hashed_password else encryption_password()
-
-
-
-
