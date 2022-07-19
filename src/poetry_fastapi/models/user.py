@@ -10,6 +10,14 @@
 from poetry_fastapi.db.base_class import Base, gen_nanoid
 from sqlalchemy import Column, Boolean, Integer, String, VARCHAR, BIGINT, \
     ForeignKey
+from nanoid import non_secure_generate
+
+
+def get_nanoid() -> str:
+    """
+    生成nanoid 长度5
+    """
+    return non_secure_generate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", size=5)
 
 
 # 用户表
@@ -29,9 +37,9 @@ class User(Base):
 # 权限表
 class Permission(Base):
     __tablename__ = "permission"
-    parent_id = Column(VARCHAR(12), default=gen_nanoid, unique=True,
+    parent_id = Column(VARCHAR(5), default=get_nanoid, unique=True,
                        comment="所属父级权限ID")
-    code = Column(VARCHAR(32), comment="权限唯一CODE代码")
+    code = Column(VARCHAR(5), default=get_nanoid, comment="权限唯一CODE代码")
     name = Column(VARCHAR(32), comment="权限名称")
     intro = Column(VARCHAR(32), comment="权限介绍")
     category = Column(VARCHAR(32), comment="权限类别")
@@ -42,8 +50,8 @@ class Permission(Base):
 # 角色表
 class Role(Base):
     __tablename__ = "role"
-    parent_id = Column(VARCHAR(12), default=gen_nanoid, comment="所属父级角色ID")
-    code = Column(VARCHAR(32), comment="角色唯一CODE代码")
+    parent_id = Column(VARCHAR(5), default=get_nanoid, comment="所属父级角色ID")
+    code = Column(VARCHAR(5),default=get_nanoid, comment="角色唯一CODE代码")
     name = Column(VARCHAR(32), comment="角色名称")
     intro = Column(VARCHAR(255), comment="角色介绍")
     __table_args__ = ({'comment': '角色表'})
@@ -52,9 +60,9 @@ class Role(Base):
 # 用户组
 class UserGroup(Base):
     __tablename__ = "user_group"
-    parent_id = Column(VARCHAR(32), comment="所属父级用户组ID")
+    parent_id = Column(VARCHAR(5),default=get_nanoid, comment="所属父级用户组ID")
     name = Column(VARCHAR(32), comment="用户组名称")
-    code = Column(VARCHAR(32), comment="用户组CODE唯一代码")
+    code = Column(VARCHAR(5), default=get_nanoid,comment="用户组CODE唯一代码")
     intro = Column(VARCHAR(32), comment="用户组介绍")
     __table_args__ = ({'comment': '用户组'})
 

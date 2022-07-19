@@ -39,3 +39,5 @@ def encryption_password_or_decode(*, pwd: str, salt: str = None, hashed_password
         return password
 
     return decode_password() if hashed_password else encryption_password()
+
+

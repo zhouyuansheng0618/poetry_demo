@@ -1,16 +1,16 @@
 """init commit
 
-Revision ID: 5cdb2af78f3c
+Revision ID: 3623874816b2
 Revises: 
-Create Date: 2022-07-14 13:52:10.127333
+Create Date: 2022-07-19 15:37:37.199878
 
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import mysql
+
 
 # revision identifiers, used by Alembic.
-revision = '5cdb2af78f3c'
+revision = '3623874816b2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,14 +23,12 @@ def upgrade() -> None:
     sa.Column('create_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='创建时间'),
     sa.Column('update_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='更新时间'),
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
-    sa.Column('parent_id', sa.VARCHAR(length=12), nullable=True, comment='所属父级权限ID'),
-    sa.Column('code', sa.VARCHAR(length=32), nullable=True, comment='权限唯一CODE代码'),
+    sa.Column('parent_id', sa.VARCHAR(length=5), nullable=True, comment='所属父级权限ID'),
+    sa.Column('code', sa.VARCHAR(length=5), nullable=True, comment='权限唯一CODE代码'),
     sa.Column('name', sa.VARCHAR(length=32), nullable=True, comment='权限名称'),
     sa.Column('intro', sa.VARCHAR(length=32), nullable=True, comment='权限介绍'),
     sa.Column('category', sa.VARCHAR(length=32), nullable=True, comment='权限类别'),
     sa.Column('uri', sa.VARCHAR(length=255), nullable=True, comment='URL规则'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('parent_id'),
     comment='权限表'
@@ -41,12 +39,10 @@ def upgrade() -> None:
     sa.Column('create_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='创建时间'),
     sa.Column('update_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='更新时间'),
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
-    sa.Column('parent_id', sa.VARCHAR(length=12), nullable=True, comment='所属父级角色ID'),
-    sa.Column('code', sa.VARCHAR(length=32), nullable=True, comment='角色唯一CODE代码'),
+    sa.Column('parent_id', sa.VARCHAR(length=5), nullable=True, comment='所属父级角色ID'),
+    sa.Column('code', sa.VARCHAR(length=5), nullable=True, comment='角色唯一CODE代码'),
     sa.Column('name', sa.VARCHAR(length=32), nullable=True, comment='角色名称'),
     sa.Column('intro', sa.VARCHAR(length=255), nullable=True, comment='角色介绍'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.PrimaryKeyConstraint('id'),
     comment='角色表'
     )
@@ -60,10 +56,8 @@ def upgrade() -> None:
     sa.Column('name', sa.VARCHAR(length=64), nullable=False, comment='用户名'),
     sa.Column('head_img_url', sa.VARCHAR(length=255), nullable=True, comment='用户图像地址'),
     sa.Column('mobile', sa.VARCHAR(length=11), nullable=True, comment='手机号'),
-    sa.Column('salt', sa.VARCHAR(length=64), nullable=True, comment='用户密码加盐'),
+    sa.Column('salt', sa.VARCHAR(length=6), nullable=True, comment='用户密码加盐'),
     sa.Column('hashed_password', sa.VARCHAR(length=128), nullable=False, comment='密码'),
-    sa.Column('creator', sa.VARCHAR(length=36), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=36), nullable=True, comment='修改人'),
     sa.PrimaryKeyConstraint('id'),
     comment='用户表'
     )
@@ -74,12 +68,10 @@ def upgrade() -> None:
     sa.Column('create_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='创建时间'),
     sa.Column('update_time', sa.DateTime(), server_default=sa.text('now()'), nullable=True, comment='更新时间'),
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
-    sa.Column('parent_id', sa.VARCHAR(length=32), nullable=True, comment='所属父级用户组ID'),
+    sa.Column('parent_id', sa.VARCHAR(length=5), nullable=True, comment='所属父级用户组ID'),
     sa.Column('name', sa.VARCHAR(length=32), nullable=True, comment='用户组名称'),
-    sa.Column('code', sa.VARCHAR(length=32), nullable=True, comment='用户组CODE唯一代码'),
+    sa.Column('code', sa.VARCHAR(length=5), nullable=True, comment='用户组CODE唯一代码'),
     sa.Column('intro', sa.VARCHAR(length=32), nullable=True, comment='用户组介绍'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.PrimaryKeyConstraint('id'),
     comment='用户组'
     )
@@ -91,11 +83,11 @@ def upgrade() -> None:
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
     sa.Column('user_id', sa.VARCHAR(length=10), nullable=True),
     sa.Column('open_code', sa.VARCHAR(length=255), nullable=True, comment='登录账号，如手机号 微信号等'),
+    sa.Column('account', sa.VARCHAR(length=10), nullable=True, comment='账号'),
     sa.Column('category', sa.Integer(), nullable=True, comment='账号类别'),
-    sa.Column('creator', sa.VARCHAR(length=36), nullable=False, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=36), nullable=False, comment='修改人'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('account'),
     sa.UniqueConstraint('open_code'),
     comment='账号表'
     )
@@ -107,8 +99,6 @@ def upgrade() -> None:
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
     sa.Column('role', sa.VARCHAR(length=10), nullable=True, comment='角色权限管理ID'),
     sa.Column('permission', sa.VARCHAR(length=10), nullable=True, comment='角色权限管理'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.ForeignKeyConstraint(['permission'], ['permission.id'], ),
     sa.ForeignKeyConstraint(['role'], ['role.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -122,8 +112,6 @@ def upgrade() -> None:
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
     sa.Column('user_group', sa.VARCHAR(length=10), nullable=True, comment='用户组ID'),
     sa.Column('role', sa.VARCHAR(length=10), nullable=True, comment='角色ID'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.ForeignKeyConstraint(['role'], ['role.id'], ),
     sa.ForeignKeyConstraint(['user_group'], ['user_group.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -137,8 +125,6 @@ def upgrade() -> None:
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
     sa.Column('user_group', sa.VARCHAR(length=10), nullable=True, comment='用户组ID'),
     sa.Column('role', sa.VARCHAR(length=10), nullable=True, comment='角色ID'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.ForeignKeyConstraint(['role'], ['role.id'], ),
     sa.ForeignKeyConstraint(['user_group'], ['user_group.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -152,30 +138,17 @@ def upgrade() -> None:
     sa.Column('is_delete', sa.Integer(), server_default='0', nullable=True, comment='逻辑删除:0=未删除,1=删除'),
     sa.Column('user', sa.VARCHAR(length=10), nullable=True, comment='用户ID'),
     sa.Column('role', sa.VARCHAR(length=10), nullable=True, comment='角色ID'),
-    sa.Column('creator', sa.VARCHAR(length=32), nullable=True, comment='创建人'),
-    sa.Column('editor', sa.VARCHAR(length=32), nullable=True, comment='修改人'),
     sa.ForeignKeyConstraint(['role'], ['role.id'], ),
     sa.ForeignKeyConstraint(['user'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     comment='用户角色关联表'
     )
     op.create_index(op.f('ix_user_role_id'), 'user_role', ['id'], unique=False)
-    op.drop_index('ix_apscheduler_jobs_next_run_time', table_name='apscheduler_jobs')
-    op.drop_table('apscheduler_jobs')
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.create_table('apscheduler_jobs',
-    sa.Column('id', mysql.VARCHAR(length=191), nullable=False),
-    sa.Column('next_run_time', mysql.DOUBLE(asdecimal=True), nullable=True),
-    sa.Column('job_state', sa.BLOB(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    mysql_default_charset='utf8',
-    mysql_engine='InnoDB'
-    )
-    op.create_index('ix_apscheduler_jobs_next_run_time', 'apscheduler_jobs', ['next_run_time'], unique=False)
     op.drop_index(op.f('ix_user_role_id'), table_name='user_role')
     op.drop_table('user_role')
     op.drop_index(op.f('ix_user_group_user_id'), table_name='user_group_user')
