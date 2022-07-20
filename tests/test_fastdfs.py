@@ -8,11 +8,13 @@
 @Time ： 2022/7/20 17:29
 """
 from fdfs_client.client import get_tracker_conf, Fdfs_client
+
+
 def main():
     tracker_conf = get_tracker_conf('client.conf')
     client = Fdfs_client(tracker_conf)
 
-    #文件上传，结果返回：{'Group name': b'group1', 'Remote file_id': b'group1/M00/00/00/wKgf3F5MAe2AV_23AAAADL_GVeU370.txt', 'Status': 'Upload successed.', 'Local file name': 'test.txt', 'Uploaded size': '12B', 'Storage IP': b'192.168.31.220'}
+    # 文件上传，结果返回：{'Group name': b'group1', 'Remote file_id': b'group1/M00/00/00/wKgf3F5MAe2AV_23AAAADL_GVeU370.txt', 'Status': 'Upload successed.', 'Local file name': 'test.txt', 'Uploaded size': '12B', 'Storage IP': b'192.168.31.220'}
     result = client.upload_by_filename('1.png')
 
     print(result)
@@ -30,5 +32,18 @@ def main():
     # result = client.list_servers(b'group1')
 
 
+from fdfs_client.client import *
+
+
+def upload(path):
+    tracker_conf = get_tracker_conf('client.conf')
+    client = Fdfs_client(tracker_conf)
+    resp = client.upload_by_filename(path)
+    for item in resp:
+        if isinstance(resp[item], bytes):
+            resp[item] = str(resp[item], encoding='utf8')
+    return resp
+
+
 if __name__ == '__main__':
-    main()
+    print(upload(path='1.jpg'))
