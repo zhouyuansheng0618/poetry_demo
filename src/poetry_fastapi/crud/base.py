@@ -8,7 +8,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+
 
 from poetry_fastapi.db.base_class import Base
 
@@ -21,16 +21,53 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
-    def get(self, db: Session, id: Any) -> Optional[ModelType]:
+    def get_id(self, db: Session, id: str) -> Optional[ModelType]:
+        """
+        根据id查询
+        :param db:
+        :param id:
+        :return:
+        """
         return db.query(self.model).filter(self.model.id == id).first()
 
-    def get_query(self, db: Session, filter: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(*filter).all()
+    def get_all(self, db: Session) -> Optional[ModelType]:
+        """
+        查询所有
+        :param db:
+        :return:
+        """
+        return db.query(self.model).all()
+
+    def get_query(self, db: Session, filters: Any) -> Optional[ModelType]:
+        """
+        条件查询所有
+        :param db:
+        :param filters:
+        :return:
+        """
+        return db.query(self.model).filter(*filters).all()
+
+    def get_query_count(self, db: Session, filters: Any) -> Optional[int]:
+        """
+        统计条数
+        :param db:
+        :param filters:
+        :return:
+        """
+        return db.query(self.model).filter(*filters).count()
 
     def get_multi(
-            self, db: Session, *, skip: int = 0, limit: int = 100, filter: Any
+            self, db: Session, *, skip: int = 0, limit: int = 100, filters: Any
     ) -> List[ModelType]:
-        return db.query(self.model).filter(*filter).offset(skip).limit(limit).all()
+        """
+        分页查询
+        :param db:
+        :param skip:
+        :param limit:
+        :param filters:
+        :return:
+        """
+        return db.query(self.model).filter(*filters).offset(skip).limit(limit).all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
@@ -61,6 +98,12 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     def remove(self, db: Session, *, id: str) -> ModelType:
+        """
+        假删除 修改状态
+        :param db:
+        :param id:
+        :return:
+        """
         obj = db.query(self.model).filter(self.model.id == id).update({"is_delete": 1})
         db.commit()
         return obj

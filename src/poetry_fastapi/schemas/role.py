@@ -19,3 +19,7 @@ class BaseRole(BaseModel):
 class CreateRole(BaseRole):
     intro: Optional[str] = None
 
+
+class UpdateRole(BaseRole):
+    pass
+

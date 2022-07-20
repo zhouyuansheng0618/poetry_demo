@@ -26,12 +26,14 @@ def gen_nanoid() -> str:
 class Base:
     # 通用的字段
     id = Column(VARCHAR(12), default=gen_nanoid, primary_key=True, index=True)
+    # description = Column(VARCHAR(255), max_length=255, verbose_name="描述", null=True, blank=True, help_text="描述")
     create_time = Column(DateTime, default=datetime.now, server_default=func.now(), comment="创建时间")
     update_time = Column(DateTime, default=datetime.now, onupdate=datetime.now, server_default=func.now(),
                          server_onupdate=func.now(), comment="更新时间")
-    description = Column(VARCHAR(255),max_length=255, verbose_name="描述", null=True, blank=True, help_text="描述")
-    modifier = Column(VARCHAR(255),max_length=255, null=True, blank=True, help_text="修改人", verbose_name="修改人")
-    dept_belong_id = Column(VARCHAR(255),max_length=255, help_text="数据归属部门", null=True, blank=True, verbose_name="数据归属部门")
+    # creator = Column(VARCHAR(255), max_length=255, null=True, blank=True, help_text="创建人", verbose_name="创建人")
+    # modifier = Column(VARCHAR(255), max_length=255, null=True, blank=True, help_text="修改人", verbose_name="修改人")
+    # dept_belong_id = Column(VARCHAR(255), max_length=255, help_text="数据归属部门", null=True, blank=True,
+    #                         verbose_name="数据归属部门")
     is_delete = Column(Integer, default=0, comment="逻辑删除:0=未删除,1=删除", server_default='0')
     __name__: str
 

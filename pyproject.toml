@@ -23,6 +23,7 @@ nanoid = "^2.0.0"
 redis = "^4.3.4"
 passlib = "^1.7.4"
 bcrypt = "^3.2.2"
+py3Fdfs = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

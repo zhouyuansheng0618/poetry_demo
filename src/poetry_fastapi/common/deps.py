@@ -24,9 +24,15 @@ from poetry_fastapi.config.config import settings
 from sqlalchemy.orm import Session
 from fastapi import Header, Depends, HTTPException
 
-from poetry_fastapi.common.get_db import get_db
+from poetry_fastapi.db.session import SessionLocal
 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 def check_jwt_token(
         token: Optional[str] = Header(..., description="登录token")
 ) -> Union[str, Any]:

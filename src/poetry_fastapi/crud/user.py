@@ -15,17 +15,23 @@ from poetry_fastapi.utils.encrypt import encryption_password_or_decode
 class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
 
     @staticmethod
-    def get_all(db: Session) -> Optional[User]:
+    def get_user_all(db: Session) -> Optional[User]:
         return db.query(User).all()
 
-    def get_id(self, db: Session, id: str = None) -> Optional[User]:
-        return db.query(User).filter(id=id).first()
+    @staticmethod
+    def get_user_id(db: Session, uid: str = None) -> Optional[User]:
+        return db.query(User).filter(id=uid).first()
 
-    def get_name(self, db: Session, name: str = None) -> Optional[User]:
+    @staticmethod
+    def get_user_name(db: Session, name: str = None) -> Optional[User]:
         return db.query(User).filter(User.name == name, User.state == 0, User.is_delete == 0).first()
-    def get_phone(self, db: Session, phone: str = None) -> Optional[User]:
+
+    @staticmethod
+    def get_phone(db: Session, phone: str = None) -> Optional[User]:
         return db.query(User).filter(User.mobile == phone, User.state == 0, User.is_delete == 0).first()
-    def create(self, db: Session, *, obj_in: CreateUser) -> Optional[User]:
+
+    @staticmethod
+    def create_user(db: Session, *, obj_in: CreateUser) -> Optional[User]:
 
         hash_password, salt = encryption_password_or_decode(pwd=obj_in.password)
         db_obj = User(
@@ -57,7 +63,7 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
         if not user:
             return None
 
-        if not encryption_password_or_decode(pwd=password, salt= user.salt, hashed_password=user.hashed_password):
+        if not encryption_password_or_decode(pwd=password, salt=user.salt, hashed_password=user.hashed_password):
             return None
 
         return user
