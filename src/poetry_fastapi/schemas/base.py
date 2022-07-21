@@ -5,7 +5,7 @@
 # @desc:
 
 from pydantic import BaseModel, Field
-from typing import List, Any, Optional
+from typing import List
 
 
 class BaseResp(BaseModel):
@@ -18,3 +18,6 @@ class ResAntTable(BaseModel):
     success: bool = Field(description="状态码")
     data: List = Field(description="数据")
     total: int = Field(description="总条数")
+
+
+

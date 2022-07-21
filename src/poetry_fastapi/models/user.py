@@ -46,6 +46,15 @@ class Permission(Base):
     uri = Column(VARCHAR(255), comment="URL规则")
     __table_args__ = ({'comment': '权限表'})
 
+# 用户账号表
+class Account(Base):
+    __tablename__ = "account"
+    user_id = Column(VARCHAR(10), ForeignKey("user.id"))  # 与用户表进行关联
+    open_code = Column(VARCHAR(255), unique=True, nullable=True,
+                       comment="登录账号，如手机号 微信号等")
+    account = Column(VARCHAR(10), comment="账号", unique=True)
+    category = Column(Integer, comment="账号类别", nullable=True)
+    __table_args__ = ({'comment': '账号表'})
 
 # 角色表
 class Role(Base):
@@ -67,15 +76,7 @@ class UserGroup(Base):
     __table_args__ = ({'comment': '用户组'})
 
 
-# 用户账号表
-class Account(Base):
-    __tablename__ = "account"
-    user_id = Column(VARCHAR(10), ForeignKey("user.id"))  # 与用户表进行关联
-    open_code = Column(VARCHAR(255), unique=True, nullable=True,
-                       comment="登录账号，如手机号 微信号等")
-    account = Column(VARCHAR(10), comment="账号", unique=True)
-    category = Column(Integer, comment="账号类别", nullable=True)
-    __table_args__ = ({'comment': '账号表'})
+
 
 
 # 用户角色关联表

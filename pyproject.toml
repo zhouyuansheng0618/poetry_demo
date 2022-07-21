@@ -24,6 +24,8 @@ redis = "^4.3.4"
 passlib = "^1.7.4"
 bcrypt = "^3.2.2"
 py3Fdfs = "^2.2.0"
+fastapi-pagination = "^0.9.3"
+apache-skywalking = {extras = ["http"], version = "^0.8.0"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

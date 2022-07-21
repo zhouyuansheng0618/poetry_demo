@@ -24,7 +24,7 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
 
     @staticmethod
     def get_user_name(db: Session, name: str = None) -> Optional[User]:
-        return db.query(User).filter(User.name == name, User.state == 0, User.is_delete == 0).first()
+        return db.query(User).filter(User.name == name).first()
 
     @staticmethod
     def get_phone(db: Session, phone: str = None) -> Optional[User]:
@@ -36,7 +36,7 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
         hash_password, salt = encryption_password_or_decode(pwd=obj_in.password)
         db_obj = User(
             name=obj_in.name,
-            head_img_url='',
+            head_img_url='http://59.110.27.227:8888/group1/M00/00/00/rB4UmGLYxIeADNQwAABcQLWKEBw363.jpg',
             mobile=obj_in.phone,
             salt=salt,
             hashed_password=hash_password
@@ -57,7 +57,7 @@ class CrudUser(CrudBase[User, CreateUser, UpdateUser]):
         if not name and not phone:
             return None
         if name:
-            user = crud_user.get_name(db, name)
+            user = crud_user.get_user_name(db, name)
         if phone:
             user = crud_user.get_phone(db, phone)
         if not user:

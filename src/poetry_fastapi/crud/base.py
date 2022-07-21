@@ -57,7 +57,7 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db.query(self.model).filter(*filters).count()
 
     def get_multi(
-            self, db: Session, *, skip: int = 0, limit: int = 100, filters: Any
+            self, db: Session, *, skip: int = 0, limit: int = 100, filters: List
     ) -> List[ModelType]:
         """
         分页查询

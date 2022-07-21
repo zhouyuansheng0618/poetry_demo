@@ -5,8 +5,9 @@
 # @desc:
 from typing import Any
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 from fastapi.encoders import jsonable_encoder
+
 
 from poetry_fastapi.common import response_code, resp
 from poetry_fastapi.common.deps import *
@@ -24,30 +25,41 @@ router = APIRouter()
 
 @router.post("/user", summary="创建用户", response_model=CreateUser)
 def create_user(user: CreateUser, db: Session = Depends(get_db)):
-    is_user = crud_user.get_name(db, name=user.name)
+    is_user = crud_user.get_user_name(db, name=user.name)
     if is_user:
         return response_code.resp_4005(message="用户已存在")
-    user_data = crud_user.create(db, obj_in=user)
+    user_data = crud_user.create_user(db, obj_in=user)
     return response_code.resp_200(data=user_data, message="创建用户成功")
 
 
-@router.get("/user/all", summary="查询未删除的所有用户")
-def user_not_delete_list(db: Session = Depends(get_db),
+from enum import Enum
+
+
+class IsDeleteEnum(str, Enum):
+    """
+    true  状态为0
+    false 状态为1
+    """
+    true = True
+    false = False
+
+
+@router.get("/user/all", summary="查询未删除的所有用户",response_model=UserInfo)
+def user_not_delete_list(is_delete: IsDeleteEnum = Query(None),
+                         db: Session = Depends(get_db),
                          skip: str = 0,
                          limit: int = 20):
-    filters = [User.is_delete == 0]
-    user_data = crud_user.get_multi(db, skip=skip, limit=limit, filter=filters)
+    filters = []
+    if is_delete == None:
+        pass
+    if is_delete == IsDeleteEnum.false:
+        filters.append(User.is_delete == 1)
+    if is_delete == IsDeleteEnum.true:
+        filters.append(User.is_delete == 0)
+
+    user_data = crud_user.get_multi(db, skip=skip, limit=limit, filters=filters)
     return response_code.resp_200(data=user_data)
 
-
-@router.get("/delete/all", summary="查询删除的所有用户")
-def user_delete_list(db: Session = Depends(get_db),
-                     skip: str = 0,
-                     limit: int = 20):
-    filters = [User.is_delete == 1]
-
-    user_data = crud_user.get_multi(db, skip=skip, limit=limit, filter=filters)
-    return response_code.resp_200(data=user_data)
 
 
 

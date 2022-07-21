@@ -41,9 +41,9 @@ def delete_role():
 # 查询所有未删除角色
 @router.get("/all", summary="查询所有")
 def get_is_delete_all_role(db: Session = Depends(get_db)):
-    role = crud_role.get_all(db)
-    print(role)
-    return response_code.resp_200(data={})
+    filters = []
+    role = crud_role.get_multi(db, filters=filters)
+    return response_code.resp_200(data=role)
 
 
 # 查询删除角色

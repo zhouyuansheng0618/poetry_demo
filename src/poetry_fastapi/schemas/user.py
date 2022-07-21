@@ -10,14 +10,21 @@ from poetry_fastapi.schemas.base import BaseResp, ResAntTable
 
 
 class BaseUser(BaseModel):
-    username: str = Field(min_length=2, max_length=32)
-    password: str = Field(min_length=6, max_length=18)
+    name: str = Field(min_length=2, max_length=32, example='zhangsan')
 
 
-class CreateUser(BaseModel):
-    name: str = Field(min_length=2, max_length=32)
-    phone: str = Field(min_length=11, max_length=11)
-    password: str = Field(min_length=6, max_length=18)
+class Account(BaseModel):
+    open_code: str
+    category: int
+
+
+class CreateUser(BaseUser):
+    phone: str = Field(min_length=11, max_length=11, example='13166668888')
+    password: str = Field(min_length=6, max_length=18, example='admin123')
+    account: List[Account] = []
+
+    class Config:
+        orm_mode = True
 
 
 class UpdateUser(BaseModel):
